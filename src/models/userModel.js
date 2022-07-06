@@ -11,14 +11,14 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: "Name is Required",
-      
+      trim:true
     },
 
     phone: {
       type: String,
       required: "Phone is Required",
-      unique:true
-      
+      unique:true,
+       trim :true
     },
 
     email: {
