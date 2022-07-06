@@ -5,17 +5,17 @@ const isValid=function(x){
     return true
 }
 
-const isvalidnumber=function(x){
+const isValidnumber=function(x){
     if(typeof x==="undefined" || typeof x===null) return false
     if(typeof x!=="number" )return false
     return true
 }
 
-const isvalidString=function(x){
+const isValidString=function(x){
     if(typeof x==="string" && x.trim().length===0) return false
     return true  
 }
-const isvalidbody=function(x){
+const isValidbody=function(x){
     return Object.keys(x).length>0
 }
-module.exports={isValid,isvalidnumber,isvalidbody,isvalidString}
+module.exports={isValid,isValidnumber,isValidbody,isValidString}
