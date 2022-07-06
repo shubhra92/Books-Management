@@ -3,7 +3,7 @@ const ObjectId=mongoose.Schema.Types.ObjectId
 
 const bookSchema=new mongoose.Schema({
     
-        title: {title:String,
+        title: {type:String,
              required:true,
              unique: true},
         excerpt: {type:String, 
