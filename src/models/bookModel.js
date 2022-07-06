@@ -5,7 +5,7 @@ const bookSchema=new mongoose.Schema({
     
         title: {title:String,
              required:true,
-             required: unique},
+             unique: true},
         excerpt: {type:String, 
             required:true}, 
         userId: {
@@ -33,4 +33,4 @@ const bookSchema=new mongoose.Schema({
        
     
 },{timestamps:true})
-const exports=mongoose.model("Book",bookSchema)
+module.exports=mongoose.model("Book",bookSchema)
