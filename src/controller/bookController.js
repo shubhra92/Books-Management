@@ -1,4 +1,4 @@
-const { isValid, isValidbody, isValidnumber,isValidString } = require("./validator")
+const { isValid, isValidbody} = require("./validator")
 const mongoose=require("mongoose")
 const bookModel = require("../models/bookModel")
 const userModel=require("../models/userModel")
@@ -135,7 +135,7 @@ const getBooks = async function (req, res) {
     //     }
         // obj.isDeleated=false
 
-        const books = await Bookmodel.find({...obj,isDeleted:false}).select({createdAt:0,updatedAt:0,__v:0,subcategory:0,isDeleated:0})
+        const books = await bookModel.find({...obj,isDeleted:false}).select({createdAt:0,updatedAt:0,__v:0,subcategory:0,isDeleated:0})
         if(!books.length){
             return res.status(408).send({ status: false,message:"there is no book found" })
 
@@ -156,7 +156,7 @@ const getBooksById=async function(req,res){
         return res.status(400).send({ status: false, message: "bookId is not valid" })
     }
 
-      let allbooks=await Bookmodel.findOne({_id:bookId,isDeleated:false}).lean().select({__v:0})
+      let allbooks=await bookModel.findOne({_id:bookId,isDeleated:false}).lean().select({__v:0})
       if(!allbooks){
         return res.status(400).send({ status: false, message: "books not found" })
 
@@ -185,7 +185,11 @@ const updatedetails=async function(req,res){
     try{
      const bookId=req.params.bookId
      const requestbody=req.body
-     const{title,excerpt,releaseAt,ISBN}=requestbody
+     let{title,excerpt,releaseAt,ISBN}=requestbody
+
+     if (!mongoose.isValidObjectId(bookId)) {
+        return res.status(400).send({ status: false, message: "Id is not valid" })
+    }
 
      if (!isValidbody(requestbody)) {
         return res.status(400).send({ status: false, message: "body can't be empty " })
@@ -196,16 +200,17 @@ const updatedetails=async function(req,res){
     // }
     //id is checking whether valid or not
     
-    if (!mongoose.isValidObjectId(bookId)) {
-        return res.status(400).send({ status: false, message: "Id is not valid" })
-    }
+    
   
 
 
     let obj={}
 
     if(isValid(title)){
-       obj.title=title.trim()
+        title=title.trim()
+        const titleCheck=await bookModel.findOne({title})
+        if(titleCheck)return res.status(400).send({ status: false, message: "title already exist" })
+       obj.title=title
     }
     if(isValid(excerpt)){
      obj.excerpt=excerpt.trim()
@@ -214,25 +219,17 @@ const updatedetails=async function(req,res){
         obj.releaseAt=releaseAt.trim()
     }
     if(isValid(ISBN)){
-     obj.ISBN=ISBN.trim()
+        ISBN=ISBN.trim()
+        const ISBNCheck=await bookModel.findOne({ISBN})
+        if(ISBNCheck)return res.status(400).send({ status: false, message: "ISBN already exist" })
+     obj.ISBN=ISBN
     }
     if(!isValidbody(obj)){
-        return res.status(200).send({ status: false, message:"you can update by only ISBN,releaseAt,title,excerpt" })
+        return res.status(400).send({ status: false, message:"you can update by only ISBN,releaseAt,title,excerpt" })
 }
 
 
-//Title and IsBN unique checking
-const uniqueCheck=await bookModel.findOne({$or:[{title},{ISBN}]})
-if(uniqueCheck){
-    if(uniqueCheck.title==title){
-        return res.status(400).send({ status: false, message: "title alraedy exist" })
-    
-    }else{
-        return res.status(400).send({ status: false, message: "ISBN alraedy exist" })
-
-    }
-}
-     
+   
      let updateBook=await bookModel.findByIdAndUpdate(bookId,obj,{new:true})
      res.status(200).send({ status: false, requestbody:updateBook })
 
