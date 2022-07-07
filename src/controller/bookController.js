@@ -33,17 +33,26 @@ const createbook = async function (req, res) {
             return res.status(400).send({ status: false, message: "plz enter category" })
         }
 
-        if (Array.isArray(subcategory)) {
+        if (Array.isArray(subcategory)) { 
+            let arr=[] 
             if (subcategory.length === 0) {
-                return res.status(400).send({ status: false, message: "plz enter subcategory as a empty array" })
+                return res.status(400).send({ status: false, message: "subcategory can not be empty array" })
             }
-            data["subcategory"] = [...subcategory]
+            subcategory.forEach(x=>{
+                if(isValid(x)){
+                    arr.push(x)
+                }
+            })
+            if (arr.length === 0) {
+                return res.status(400).send({ status: false, message: "subcategory can not be empty array" })
+            }
+            data["subcategory"] = [...arr]
             //it's checking subcategory as a string
         } else if (isValid(subcategory)) {
 
             data["subcategory"] = subcategory.trim()
         } else {
-            return res.status(400).send({ status: false, message: "plz enter subcategory as a empty string" })
+            return res.status(400).send({ status: false, message: "subcategory can not be empty array" })
         }
         if (!isValid(releasedAt)) {
             return res.status(400).send({ status: false, message: "plz enter releasedAt" })
@@ -64,7 +73,7 @@ const createbook = async function (req, res) {
         const userDetails=await userModel.findOne({_id:userId})
         console.log(userDetails)
             if(!userDetails){
-                return res.status(400).send({ status: false, message: "userId not exist" })
+                return res.status(404).send({ status: false, message: "user not exist" })
 
             
         }
