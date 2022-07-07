@@ -1,23 +1,29 @@
 {
   "name": "myproject3",
   "version": "1.0.0",
-  "description": "book-mannagement",
+  "description": "## Project - Books Management",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AvijitHazra240499/MyProject3.git"
+    "url": "git+https://github.com/AtifPervez/MyProject3.git"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AvijitHazra240499/MyProject3/issues"
+    "url": "https://github.com/AtifPervez/MyProject3/issues"
   },
-  "homepage": "https://github.com/AvijitHazra240499/MyProject3#readme",
+  "homepage": "https://github.com/AtifPervez/MyProject3#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "express": "^4.18.1",
-    "mongoose": "^6.4.3"
+    "isvalid": "^4.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.3",
+    "nodemon": "^2.0.19",
+    "pincode-validator": "^1.0.3"
   }
 }

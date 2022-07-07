@@ -1,4 +1,4 @@
-const { isValid, isValidbody} = require("./validator")
+const { isValid, isValidbody} = require("../validator/validator")
 const mongoose=require("mongoose")
 const bookModel = require("../models/bookModel")
 const userModel=require("../models/userModel")
