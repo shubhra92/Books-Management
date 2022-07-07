@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel")
-const { isValid } = require("../validator/validator")
+const { isValid, isValidTitle, nameRegex, emailRegex, phoneRegex, passRegex } = require("../validator/validator")
+
 const pinValidator = require('pincode-validator')
 
 
