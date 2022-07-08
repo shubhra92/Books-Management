@@ -31,17 +31,16 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       trim: true,
-      minlength: 8,
-      maxlength: 15,
       required: "Password is Required",
-    },
-
-    address:{
-        street:{type:String,trim:true},
-        city:{type:String,trim:true},
-        pincode:{type:String,trim:true}
-    },
-    
+      minLength: 8,
+      maxLength: 15,
+      trim:true
+  },
+  address: {
+      street: { type: String,trim:true },
+      city: { type: String ,trim:true},
+      pincode: { type: String,trim:true }
+  }
 
   },
   { timestamps: true }

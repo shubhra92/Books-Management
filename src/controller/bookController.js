@@ -206,18 +206,19 @@ const updatedetails=async function(req,res){
 
     let obj={}
 
-    if(isValid(title)){
-        title=title.trim()
-        const titleCheck=await bookModel.findOne({title})
+    if(isValid(title)){  
+        title=title.trim()  
+        const titleCheck=await bookModel.findOne({title}) ///here checking title that duplicate or not
         if(titleCheck)return res.status(400).send({ status: false, message: "title already exist" })
        obj.title=title
+
     }
     if(isValid(excerpt)){
      obj.excerpt=excerpt.trim()
     }
     if(isValid(releaseAt)){
-        obj.releaseAt=releaseAt.trim()
-    }
+        obj.releaseAt=releaseAt.trim()    ///Update later
+    }    
     if(isValid(ISBN)){
         ISBN=ISBN.trim()
         const ISBNCheck=await bookModel.findOne({ISBN})
