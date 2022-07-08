@@ -13,7 +13,9 @@ const isvalidString=function(x){
     if(typeof x==="string" && x.trim().length===0) return false
     return true  
 }
-
+const isvalidbody=function(x){
+    return Object.keys(x).length>0
+}
 // Regex(s) used for the validation of different keys
 
 let nameRegex = /^[.a-zA-Z\s]+$/
