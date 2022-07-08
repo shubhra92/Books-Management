@@ -20,6 +20,7 @@ router.delete("/books/:bookId",authentication,authorisation,deletebook)
 // ========================================Review================================================
 
 router.post("/books/:bookId/review",addReview)
+router.put('/books/:bookId/review/:reviewId', reviewController.updateReview)
 
 //url checking 
 
@@ -37,7 +38,6 @@ router.put("*", (req,res) =>{
 router.delete("*", (req,res) =>{
     return res.status(404).send({ message:"Page Not Found"})
 })
-
 
 
 
