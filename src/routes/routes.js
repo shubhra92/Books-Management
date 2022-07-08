@@ -20,7 +20,8 @@ router.delete("/books/:bookId",authentication,authorisation,deletebook)
 // ========================================Review================================================
 
 router.post("/books/:bookId/review",addReview)
-router.put('/books/:bookId/review/:reviewId', reviewController.updateReview)
+router.put('/books/:bookId/review/:reviewId', updateReview)
+router.delete('/books/:bookId/review/:reviewId', deleteReview)
 
 //url checking 
 

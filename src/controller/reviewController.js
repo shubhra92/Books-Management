@@ -1,7 +1,7 @@
 const mongoose=require('mongoose')
 const reviewModel=require("../models/reviewModel")
 const bookModel=require("../models/bookModel")
-const { isValid, isValidbody,isvalidString } = require("./validator")
+const { isValid, isValidbody,isvalidString } = require("../validator/validator")
 
 
 const addReview=async function(req,res){
@@ -67,6 +67,9 @@ catch(err){
 /******************************************************Update Review API*****************************************/
 
 
+
+
+
 const updateReview=async (req,res)=>{
     try{
     const bookId=req.params.bookId
@@ -82,14 +85,14 @@ const updateReview=async (req,res)=>{
     }
     
 
-    if (!isvalid(review)) {
+    if (!isValid(review)) {
         return res.status(400).send({ status: false, message: "plz enter review" })
     }
   if([1,2,3,4,5,"1","2","3","4","5"].indexOf(data.rating)==-1){
     return res.status(400).send({ status: false, message: "plz enter rating from 1 to 5" })
   }
 
-    if (!isvalid(reviewedBy)) {
+    if (!isValid(reviewedBy)) {
         return res.status(400).send({ status: false, message: "plz enter reviewedBy" })
     }
 
