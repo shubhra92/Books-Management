@@ -1,7 +1,7 @@
 const mongoose=require('mongoose')
 const reviewModel=require("../models/reviewModel")
 const bookModel=require("../models/bookModel")
-const { isValid, isValidbody} = require("../validator/validator")
+const { isValid, isValidbody,isvalidString } = require("../validator/validator")
 
 
 const addReview=async function(req,res){
@@ -11,8 +11,8 @@ try{
     let data=req.body
 
 
-    if(!isValidbody(data)){
-        return res.status(400).send("Please enter the review Details")
+    if(!isValidbody(data)){ 
+        return res.status(400).send("Please enter the review Details") 
    }
 
     if(!isValid(data.reviewedBy)){
@@ -57,13 +57,14 @@ try{
     
     checkBook.reviewsData=reviewDetails
 
-    res.status(201).send({ status: true, message: "review created successfully", data: saveReview })
+    res.status(201).send({ status: true, message: "review created successfully", data: checkBook })
 }
 catch(err){
     res.status(500).send({ status: false, Error: err.message })
 }
 }
 
+/******************************************************Update Review API*****************************************/
 
 const deleteReview=async function(req,res){
     
@@ -71,7 +72,7 @@ const deleteReview=async function(req,res){
         let reviewId=req.params.reviewId
         let bookId=req.params.bookId
         
-        if(!mongoose.isValidObjectId(idparams)){
+        if(!mongoose.isValidObjectId(reviewId)){
             return res.status(400).send({status:false,msg:"Please Enter The Valid ReviewId "})}
 
          if(!mongoose.isValidObjectId(bookId)){
@@ -95,7 +96,78 @@ const deleteReview=async function(req,res){
     }
 
 }
-module.exports = { addReview,deleteReview};
 
 
 
+const updateReview = async function (req, res){
+    try{
+    
+        const book_id = req.params.bookId;
+        const review_Id = req.params.reviewId
+        const data = req.body
+    
+        if(!isValidbody(data)) return res.status(400).send({ status: false, msg: "To Update Please Enter The Review Details" })
+    
+        if(!isvalidString(data.reviewedBy)){
+        return res.status(400).send({ status: false, message: "Reviewer name must be present" })
+        }
+        if(data.reviewedBy){
+        if (!data.reviewedBy.match(/^[a-zA-Z. ]+$/)) {
+        return res.status(400).send({ status: false, msg: "Reviewer can't be a number" })
+        }}
+    
+    
+        if(!isvalidString(data.rating)){
+        return res.status(400).send({ status: false, message: "Rating must be present" })
+        }
+        if(data.rating){
+        if (!(data.rating >= 1 && data.rating <= 5)) {
+        return res.status(400).send({ status: false, message: "Rating must be in between 1 to 5." })
+        }}
+    
+    
+        if(!isvalidString(data.review)){
+        return res.status(400).send({ status: false, message: "Review must be present" })
+        }
+          
+        if (!mongoose.isValidObjectId(book_id)) {
+        return res.status(400).send({ status: false, message: "Invalid BookId." })
+        }
+    
+        if (!mongoose.isValidObjectId(review_Id)) {
+        return res.status(400).send({ status: false, message: "Invalid reviewId." })
+        }
+    
+        
+        let checkBook=await bookModel.findById(book_id)
+        let checkReview=await reviewModel.findById(review_Id)
+    
+        if(!checkBook){
+        return res.status(404).send({ status: false, message: "BookId Not Found" })
+        }
+    
+        if(!checkReview){
+        return res.status(404).send({ status: false, message: "reviewId Not Found" })
+        }
+    
+        if (checkBook.isDeleted == true||checkReview.isDeleted==true){
+        return res.status(400).send({ status: false, message: "Can't update review of a Deleted Book " })
+        }
+        const updateReviewData = await reviewModel.findOneAndUpdate(
+            { _id: review_Id }, 
+            { review: data.review, rating: data.rating, reviewedBy: data.reviewedBy }, 
+            { new: true })
+    
+            let result=checkBook.toObject()
+            result.reviewsData=updateReviewData
+    
+            res.status(200).send({ status: true, message: "Successfully updated the review of the book.", data: result })
+    
+    }catch(err){
+        res.status(500).send({ status: false, Error: err.message })
+    }
+    }
+    
+
+
+module.exports = { addReview,updateReview,deleteReview};
