@@ -20,7 +20,7 @@ router.delete("/books/:bookId",deletebook)
 // ========================================Review================================================
 
 router.post("/books/:bookId/review",addReview)
-
+router.put('/books/:bookId/review/:reviewId', reviewController.updateReview)
 
 
 
