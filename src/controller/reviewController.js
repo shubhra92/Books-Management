@@ -65,6 +65,37 @@ catch(err){
 }
 
 
+const deleteReview=async function(req,res){
+    
+    try{
+        let reviewId=req.params.reviewId
+        let bookId=req.params.bookId
+        
+        if(!mongoose.isValidObjectId(idparams)){
+            return res.status(400).send({status:false,msg:"Please Enter The Valid ReviewId "})}
+
+         if(!mongoose.isValidObjectId(bookId)){
+             return res.status(400).send({status:false,msg:"Please Enter The Valid bookId "})
+        
+        }
+        let deletedReview=await reviewModel.findOneAndUpdate({_id:reviewId,isDeleted:false,bookId:bookId},{isDeleted:true,deletedAt:new Date()},{new:true})
+        if(!deletedReview){
+            return res.status(400).send({status:false,msg:"Sorry:No Review Found"})
+        }
+
+        return res.status(200).send({status:true,data:deletedReview})
 
 
-module.exports = { addReview};
+        
+
+    }
+    catch(err){
+        return res.status(500).send({status:false,message:err.message})
+
+    }
+
+}
+module.exports = { addReview,deleteReview};
+
+
+

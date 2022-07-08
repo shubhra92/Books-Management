@@ -2,7 +2,7 @@ const express=require("express")
 const router=express.Router()
 const {createbook,getBooks,getBooksById,updatedetails,deletebook}=require("../controller/bookController")
 const {createUser}=require("../controller/userController")
-const {addReview}=require("../controller/reviewController")
+const {addReview,deleteReview}=require("../controller/reviewController")
 
 
 // ========================================User================================================
@@ -20,6 +20,7 @@ router.delete("/books/:bookId",deletebook)
 // ========================================Review================================================
 
 router.post("/books/:bookId/review",addReview)
+router.delete("/books/:bookId/review/:reviewId",deleteReview)
 
 
 
