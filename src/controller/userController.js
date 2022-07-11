@@ -61,7 +61,7 @@ const createUser = async function (req, res) {
             // let cityValidated = nameRegex.test(data.address.city)
             // if (!cityValidated) return res.status(400).send({ status: false, message: "Please enter a valid city name." })
         }
-
+        
         let userCreated = await userModel.create(data)
         return res.status(201).send({ status: true, message: 'Success', data: userCreated })
     } catch (err) {
