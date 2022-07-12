@@ -4,6 +4,7 @@ const bookModel = require("../models/bookModel")
 const userModel = require("../models/userModel")
 const reviewModel = require("../models/reviewModel")
 const moment = require('moment')
+const {checkISBN}=require("../validator/validator")
 
 
 // ============================================createBook===================================================
@@ -39,6 +40,7 @@ const createbook = async function (req, res) {
         if (!isValid(ISBN)) {
             return res.status(400).send({ status: false, message: "plz enter ISBN" })
         }
+        if(!checkISBN.test(ISBN)) return res.status(400).send({ status: false, message: "plz enter valid ISBN" })
         const ISBNCheck = await bookModel.findOne({ ISBN })
         if (ISBNCheck) return res.status(400).send({ status: false, message: "ISBN alraedy exist" })
 
@@ -232,6 +234,9 @@ const updatedetails = async function (req, res) {
         }
         if (isValid(ISBN)) {
             ISBN = ISBN.trim()
+        if(!checkISBN.test(ISBN)) return res.status(400).send({ status: false, message: "plz enter valid ISBN" })
+            
+
             const ISBNCheck = await bookModel.findOne({ ISBN })
             if (ISBNCheck) return res.status(400).send({ status: false, message: "ISBN already exist" })
             obj.ISBN = ISBN
