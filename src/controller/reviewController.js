@@ -7,36 +7,30 @@ let {nameRegex}=require("../validator/validator")
 
 const addReview=async function(req,res){
 try{
-     
+     let obj={}
     let book_id=req.params.bookId
-    let data=req.body
-
+    
     if (!mongoose.isValidObjectId(book_id)) {
         return res.status(400).send({ status: false, message: "Invalid BookId." })
     }
     let checkBook=await bookModel.findOne({_id:book_id,isDeleted:false}).lean()
-     
+    
     if(!checkBook){
         return res.status(404).send({ status: false, message: "BookId Not Found" })
     }
-
-
+    let data=req.body
     if(!isValidbody(data)){ 
         return res.status(400).send("Please enter the review Details") 
    }
 
-    // if(!isValid(data.reviewedBy)){
-    
-    //     delete data.reviewedBy
-    // }
     if(Object.keys(data).includes("reviewedBy")){
-
-     if(!isValid(data.reviewedBy)){
-        return res.status(400).send({ status: false, message:"Reviewer can't be empty"})  
-     }
+     if(isValid(data.reviewedBy)){
+        // return res.status(400).send({ status: false, message:"Reviewer can't be empty"})  
     if (!nameRegex.test (data.reviewedBy)) {
-        return res.status(400).send({ status: false, message: "reviwedBy must contain only letters" }) 
+        return res.status(400).send({ status: false, message: "Enter reviwedBy in correct format" }) 
     }
+    obj.reviewedBy=data.reviewedBy
+}
 }
     
     if(!isValid(data.rating)){
@@ -51,15 +45,9 @@ try{
         return res.status(400).send({ status: false, message: "Review must be present" })
     }
     
-    
-    
+    obj={...obj,rating:data.rating,review:data.review,bookId:checkBook._id,reviewedAt:new Date()}
 
-    data.bookId=checkBook._id
-    data.reviewedAt = new Date()
-
-   
-   
-    let saveReview=await reviewModel.create(data)
+    let saveReview=await reviewModel.create(obj)
 
     if (saveReview) {
         await bookModel.findOneAndUpdate({ _id: saveReview.bookId }, { $inc: { reviews: 1 } })

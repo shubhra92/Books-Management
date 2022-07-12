@@ -27,6 +27,7 @@ let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
 let passRegex = /^[a-zA-Z0-9!@#$%^&*]{8,15}$/
 let pinRegex = /^(\d{4}|\d{5}|\d{6})$/
 let streetRegex = /^(?:([A-Za-z0-9]+\-\1+[A-Za-z0-9/])|([A-Za-z0-9])|([A-Za-z]+\ \1+[A-Za-z0-9])|([([A-Za-z0-9]+\,\1+[A-Za-z0-9\s]))+$/
+let titleRegex = /^(?:([A-Za-z0-9]+\-\1+[A-Za-z0-9/])|([A-Za-z])|([A-Za-z]+\ \1+[A-Za-z0-9])|([([A-Za-z0-9]+\,\1+[A-Za-z0-9\s]))+$/
 let checkISBN= /^(?=(?:\D*\d){13}(?:(?:\D*\d){3})?$)[\d-]+$/
 //let reviewRegex = /^(?:([A-Za-z0-9]+\-\1+[A-Za-z0-9/])|([A-Za-z0-9])|([A-Za-z]+\ \1+[A-Za-z0-9])|([([A-Za-z0-9]+\,\1+[A-Za-z0-9\s])|([([A-Za-z0-9]+\.\1+[A-Za-z0-9\s]))+$/
 
@@ -34,4 +35,4 @@ let checkISBN= /^(?=(?:\D*\d){13}(?:(?:\D*\d){3})?$)[\d-]+$/
 // let nameRegex = /^[.a-zA-Z\s,-]+$/
 
 
-module.exports = { isValid, isValidTitle,isvalidString,  nameRegex, emailRegex, phoneRegex, passRegex,isValidbody,pinRegex,streetRegex,checkISBN}  // --> exporting the variables defined in the module
+module.exports = { isValid, isValidTitle,isvalidString,  nameRegex, emailRegex, phoneRegex, passRegex,isValidbody,pinRegex,streetRegex,checkISBN,titleRegex}  // --> exporting the variables defined in the module

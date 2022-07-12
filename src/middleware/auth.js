@@ -18,12 +18,13 @@ const authentication = (req, res, next) => {
         }
         let error = null
         jwt.verify(token, "This-is-a-secret-key", function (err, decoded) {
-            if (err) return error = err.message
+            if (err) error = err.message
+            if(decoded) req.decodeTokeen=decoded
         })
 
-        if (error == "invalid token") return res.status(400).send({ status: false, message: error })
-        if (error) return res.status(400).send({ status: false, message: "authorisation not successfull" })
-
+        if (error == "invalid signature") return res.status(401).send({ status: false, message:"authentication failed"})
+        if (error) return res.status(401).send({ status: false, message: error })
+        
         next()
 
 
@@ -36,8 +37,7 @@ const authentication = (req, res, next) => {
 
 const authorisation = async (req, res, next) => {
     try {
-        const token = req.headers["x-api-key"]
-        let decodetoken = jwt.decode(token, "This-is-a-secret-key")
+        let decodetoken = req.decodeTokeen
 
         const bookId = req.params.bookId
         //for createuser we are taking userId from body

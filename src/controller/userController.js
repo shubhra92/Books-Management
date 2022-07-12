@@ -84,7 +84,7 @@ const loginAuthor=async function(req,res){
     try{
     let data=req.body
     if (!isValidbody(data)) {
-        return res.status(400).send({ status: false, message: "data not found,plz enter req details" })
+        return res.status(400).send({ status: false, message: "data not found,plz enter email & password" })
     }
       let{email,password}=data 
       if (!isValid(email)) {
