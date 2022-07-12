@@ -16,7 +16,7 @@ try{
     let checkBook=await bookModel.findOne({_id:book_id,isDeleted:false}).lean()
     
     if(!checkBook){
-        return res.status(404).send({ status: false, message: "BookId Not Found" })
+        return res.status(404).send({ status: false, message: "Book Not Found" })
     }
     let data=req.body
     if(!isValidbody(data)){ 
@@ -60,7 +60,7 @@ try{
     res.status(201).send({ status: true, message: "review created successfully", data: reviewDetails })
 }
 catch(err){
-    res.status(500).send({ status: false, Error: err.message })
+    res.status(500).send({ status: false, message: err.message })
 }
 }
 
