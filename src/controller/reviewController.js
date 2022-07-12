@@ -1,8 +1,7 @@
 const mongoose=require('mongoose')
 const reviewModel=require("../models/reviewModel")
 const bookModel=require("../models/bookModel")
-const { isValid, isValidbody } = require("../validator/validator")
-let {nameRegex}=require("../validator/validator")
+const { isValid, isValidbody,nameRegex } = require("../validator/validator")
 
 /******************************************************Add Review API*****************************************/
 
@@ -83,8 +82,16 @@ const updateReview=async (req,res)=>{
     if (!mongoose.isValidObjectId(reviewId.toString())) {
         return res.status(400).send({ status: false, message: "reviewId is not valid" })
     }
+    const reviewCheck=await reviewModel.findOne({_id:reviewId,isDeleted:false})
+    if(!reviewCheck){
+        return res.status(404).send({status:false, message: `Review not found.`})
+    }
     if (!mongoose.isValidObjectId(bookId.toString())) {
         return res.status(400).send({ status: false, message: "bookId is not valid" })
+    }
+    const bookCheck=await reviewModel.findOne({_id:reviewId,isDeleted:false})
+    if(!bookCheck){
+        return res.status(404).send({status:false, message: `Book not found.`})
     }
     
 
@@ -100,16 +107,13 @@ if(rating){
 
     if (isValid(reviewedBy)) {
         if (!nameRegex.test (data.reviewedBy)) {
-            return res.status(400).send({ status: false, message: "reviwedBy must contain only letters" }) 
+            return res.status(400).send({ status: false, message: "Enter reviewedBy name in correct format" }) 
         }
         obj.reviewedBy=reviewedBy
     }
-
-    const reviewbookId=await reviewModel.findOne({_id:reviewId,isDeleted:false})
-    if(!reviewbookId){
-        return res.status(404).send({status:false, msg: `This review id not found.`})
-    }
-    if (bookId != reviewbookId.bookId) {
+    if(!isValidbody(obj))return res.status(400).send({ status: false, message: "Provide data to update [reviewedBy,rating,review]" }) 
+    
+    if (bookId != reviewCheck.bookId) {
         return res.status(404).send({status:false, msg: "This review not belongs to this particular book."})
      }
 
@@ -135,22 +139,20 @@ const deleteReview=async function(req,res){
         if(!mongoose.isValidObjectId(bookId)){
             return res.status(400).send({status:false,message:"Please Enter The Valid bookId "})
        }
-       let bookDetail=await bookModel.findOne({bookId,isDeleted:false})
-       if(!bookDetail) return res.status(400).send({status:false,message:"book not found 😢"})
+       let bookDetail=await bookModel.findOne({_id:bookId,isDeleted:false})
+       if(!bookDetail) return res.status(400).send({status:false,message:"Sorry:Book not found 😢"})
         
         if(!mongoose.isValidObjectId(reviewId)){
             return res.status(400).send({status:false,message:"Please Enter The Valid ReviewId "})}
-        let reviewCheck=await reviewModel.findOne({reviewId,isDeleted:false})
-        if(!reviewCheck) return res.status(400).send({status:false,message:"Sorry:No Review Found 😢"})
+        let reviewCheck=await reviewModel.findOne({_id:reviewId,isDeleted:false})
+        if(!reviewCheck) return res.status(400).send({status:false,message:"Sorry:Review not Found 😢"})
 
-        let deletedReview=await reviewModel.findOneAndUpdate({_id:reviewId,isDeleted:false,bookId:bookId},{isDeleted:true,deletedAt:new Date(),$inc: { reviews: -1 }},{new:true})
+        let deletedReview=await reviewModel.findOneAndUpdate({_id:reviewId,isDeleted:false,bookId:bookId},{isDeleted:true,deletedAt:new Date()})
         if(!deletedReview){
-            return res.status(400).send({status:false,message:"Sorry:No Review Found"})
+            return res.status(400).send({status:false,message:"This review not belongs to this particular book."})
         }
+        await bookModel.updateOne({_id:bookId},{$inc: { reviews: -1 }})
         return res.status(200).send({status:true,massage:"Delete successful 👍"})
-
-
-        
 
     }
     catch(err){
