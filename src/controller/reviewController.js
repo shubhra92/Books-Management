@@ -6,7 +6,7 @@ const { isValid, isValidbody,isvalidString } = require("../validator/validator")
 
 const addReview=async function(req,res){
 try{
-
+     
     let book_id=req.params.bookId
     let data=req.body
 
@@ -24,14 +24,20 @@ try{
         return res.status(400).send("Please enter the review Details") 
    }
 
-    if(!isValid(data.reviewedBy)){
-        return res.status(400).send({ status: false, message: "Reviewer name must be present" })
-    }
+    // if(!isValid(data.reviewedBy)){
+    
+    //     delete data.reviewedBy
+    // }
+    if(Object.keys(data).includes("reviewedBy")){
 
-    if (!data.reviewedBy.match(/^[a-zA-Z. ]+$/)) {
-        return res.status(400).send({ status: false, msg: "Reviewer can't be a number" }) 
+     if(!isValid(data.reviewedBy)){
+        return res.status(400).send({ status: false, message:"Reviewer can't be empty"})  
+     }
+    if (!(/^[a-zA-Z. ]+$/).test (data.reviewedBy)) {
+        return res.status(400).send({ status: false, message: "reviwedBy must contain only letters" }) 
     }
-
+}
+    
     if(!isValid(data.rating)){
         return res.status(400).send({ status: false, message: "Rating must be present" })
     }
@@ -49,6 +55,8 @@ try{
 
     data.bookId=checkBook._id
     data.reviewedAt = new Date()
+
+   
    
     let saveReview=await reviewModel.create(data)
 
@@ -56,7 +64,7 @@ try{
         await bookModel.findOneAndUpdate({ _id: saveReview.bookId }, { $inc: { reviews: 1 } })
     }
 
-    const reviewDetails = await reviewModel.findOne({ _id: saveReview._id }).select({__v: 0,createdAt: 0,updatedAt: 0,isDeleted: 0})
+    const reviewDetails = await reviewModel.findOne({ _id: saveReview._id}).select({__v: 0,createdAt: 0,updatedAt: 0,isDeleted: 0})
     
     // checkBook.reviewsData=reviewDetails
 
