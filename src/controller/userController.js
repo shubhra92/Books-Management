@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel")
-const { isValid, isValidTitle,isValidbody, nameRegex, emailRegex, phoneRegex, passRegex } = require("../validator/validator")
+const { isValid, isValidTitle,isValidbody, nameRegex, emailRegex, phoneRegex, passRegex,pinRegex,streetRegex } = require("../validator/validator")
 
 const pinValidator = require('pincode-validator')
 const jwt=require("jsonwebtoken")
@@ -8,7 +8,7 @@ const jwt=require("jsonwebtoken")
 const createUser = async function (req, res) {
     try {
         let data = req.body
-        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, message: "Provide the data in request body." })
+        if (!isValidbody(data)) return res.status(400).send({ status: false, message: "Provide the data in request body." })
 
         const { title, name, phone, email, password } = data
 
@@ -45,17 +45,23 @@ const createUser = async function (req, res) {
 
             if (data.address) {
             if (!isValidbody(data.address))return res.status(400).send({ status: false, message: "address can't be empty,Plz Enter the street, city and pincode in the address." })
-            // if (!isValid(data.address.street) || !isValid(data.address.city) || !isValid(data.address.pincode))
-            //     return res.status(400).send({ status: false, message: "Enter the street, city and pincode in the address." })
             let c=0
+            Object.keys(data.address).forEach(x=>{if(isValid(x) && ["street","city","pincode"].includes(x)) c++})
+            if(c==0)return res.status(400).send({ status: false, message: "plz provied all details within [street, city and pincode]" })
+            c=0
             Object.values(data.address).forEach(x=>{if(isValid(x)) c++})
-            if(c==0)return res.status(400).send({ status: false, message: "Fill all details [street, city and pincode]" })
+            if(c==0)return res.status(400).send({ status: false, message: "Fillup all details [street, city and pincode]" })
 
             if (!isValid(data.address.street))return res.status(400).send({ status: false, message: "Enter the street" })
+            if (!streetRegex.test(data.address.street))return res.status(400).send({ status: false, message: "Enter the street in correct format" })
+
             if (!isValid(data.address.city))return res.status(400).send({ status: false, message: "Enter the city" })
+            if (!nameRegex.test(data.address.city))return res.status(400).send({ status: false, message: "Enter the city in correct format" })
+
             if (!isValid(data.address.pincode))return res.status(400).send({ status: false, message: "Enter the pincode" })
            
-            let pinValidated = pinValidator.validate(data.address.pincode)
+            // let pinValidated = pinValidator.validate(data.address.pincode)
+            let pinValidated = pinRegex.test(data.address.pincode)
             if (!pinValidated) return res.status(400).send({ status: false, message: "Please enter a valid pincode." })
 
             // let cityValidated = nameRegex.test(data.address.city)

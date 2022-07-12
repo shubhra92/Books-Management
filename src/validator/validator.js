@@ -20,10 +20,16 @@ const isValidbody=function(x){
 
 // Regex(s) used for the validation of different keys
 
-let nameRegex = /^[a-zA-Z\s]+$/
+// let nameRegex = /^[a-zA-Z\s]+$/
+let nameRegex = /^(?:([A-Za-z]+\ \1)|([A-Za-z]))+$/
 let emailRegex = /^[a-z]{1}[a-z0-9._]{1,100}[@]{1}[a-z]{2,15}[.]{1}[a-z]{2,10}$/
 let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
 let passRegex = /^[a-zA-Z0-9!@#$%^&*]{8,15}$/
+let pinRegex = /^(\d{4}|\d{5}|\d{6})$/
+let streetRegex = /^(?:([A-Za-z0-9]+\-\1+[A-Za-z0-9/])|([A-Za-z0-9])|([A-Za-z]+\ \1+[A-Za-z0-9])|([([A-Za-z0-9]+\,\1+[A-Za-z0-9\s]))+$/
 
 
-module.exports = { isValid, isValidTitle,isvalidString,  nameRegex, emailRegex, phoneRegex, passRegex,isValidbody }  // --> exporting the variables defined in the module
+// let nameRegex = /^[.a-zA-Z\s,-]+$/
+
+
+module.exports = { isValid, isValidTitle,isvalidString,  nameRegex, emailRegex, phoneRegex, passRegex,isValidbody,pinRegex,streetRegex}  // --> exporting the variables defined in the module
