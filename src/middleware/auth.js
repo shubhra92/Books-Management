@@ -61,12 +61,7 @@ const authorisation = async (req, res, next) => {
                     } else { req.userDetails = userDetails }
                 } else req.isValidObjectId = null
             }else req.isValidUserId = null
-        
-        
-
-
-
-
+    
         next()
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })
