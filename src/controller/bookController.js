@@ -4,7 +4,7 @@ const bookModel = require("../models/bookModel")
 const userModel = require("../models/userModel")
 const reviewModel = require("../models/reviewModel")
 const moment = require('moment')
-const {checkISBN,nameRegex,titleRegex}=require("../validator/validator")
+const {checkISBN,titleRegex}=require("../validator/validator")
 
 
 // ============================================createBook===================================================
