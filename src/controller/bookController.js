@@ -125,9 +125,9 @@ const getBooks = async function (req, res) {
             obj.subcategory = { $all: a }
         }
 
-        const books = await bookModel.find({ ...obj, isDeleted: false }).select({ createdAt: 0, updatedAt: 0, __v: 0, subcategory: 0, isDeleated: 0 })
+        const books = await bookModel.find({ ...obj, isDeleted: false }).select({ createdAt: 0, updatedAt: 0, __v: 0, subcategory: 0, isDeleated: 0,ISBN:0}).sort({title:1})
         if (!books.length) {
-            return res.status(408).send({ status: false, message: "there is no book found" })
+            return res.status(404).send({ status: false, message: "there is no book found" })
 
         }
         return res.status(200).send({ status: true,message: 'Books list', data: books })
@@ -255,7 +255,7 @@ const deletebook = async function (req, res) {
         if (!deletedbook) {
             return res.status(404).send({ status: false, message: "no book found" })
         }
-        return res.status(200).send({ status: true, data: deletedbook })
+        return res.status(200).send({ status: true,message: "Success" })
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })
