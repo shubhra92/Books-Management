@@ -6,7 +6,7 @@ const {addReview,updateReview,deleteReview}=require("../controller/reviewControl
 const {authentication,authorisation}=require("../middleware/auth")
 
 // ========================================User================================================
-router.post("/user",createUser)
+router.post("/register",createUser)
 router.post("/login",loginAuthor)
 // ========================================Book================================================
 
