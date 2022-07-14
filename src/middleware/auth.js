@@ -21,6 +21,7 @@ const authentication = (req, res, next) => {
             if (err) error = err.message
             if(decoded) req.decodeTokeen=decoded
         })
+        
 
         if (error == "invalid signature") return res.status(401).send({ status: false, message:"authentication failed"})
         if (error) return res.status(401).send({ status: false, message: error })

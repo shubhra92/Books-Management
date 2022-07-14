@@ -13,7 +13,10 @@ const createUser = async function (req, res) {
         let { title, name, phone, email, password } = data
         let filter={ title, name, phone, email, password }
 
-        if ( !isValid(title) || !isValidTitle(title.trim()) )  // --> title should be provided in the body
+        if (!isValid(title))  // --> title should be provided in the body
+            return res.status(400).send({ status: false, message: "Please enter the user title. ⚠️" })
+
+        if (!isValidTitle(title.trim()) )  // --> title should be provided in right format
             return res.status(400).send({ status: false, message: "Please enter the title ('Mr', 'Miss', 'Mrs'). ⚠️" })
 
         if (!isValid(name))  // --> name should be provided in the body
